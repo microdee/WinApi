@@ -20,6 +20,8 @@ namespace WinApi.Utils
         private readonly WindowCore m_window;
 
         public bool BlurBehindEnabled;
+        public bool AcrylicBlur;
+        public uint AcrylicBackgroundColor;
         private bool m_isFirstNcCalcDone;
 
         public Rectangle NcOutsetThickness;
@@ -90,7 +92,9 @@ namespace WinApi.Utils
                 ref policy);
             var dwmMargins = this.GetDwmMargins();
             DwmApiMethods.DwmExtendFrameIntoClientArea(window.Handle, ref dwmMargins);
-            if (this.BlurBehindEnabled) User32ExperimentalHelpers.EnableBlurBehind(window.Handle);
+
+            if (this.BlurBehindEnabled)
+                window.EnableBlurBehind(AcrylicBlur, AcrylicBackgroundColor);
         }
 
         public virtual bool TryHandleNcCalcSize(ref NcCalcSizePacket packet)

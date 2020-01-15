@@ -19,6 +19,7 @@ namespace WinApi.User32.Experimental
         ACCENT_ENABLE_GRADIENT = 1,
         ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
         ACCENT_ENABLE_BLURBEHIND = 3,
+        ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,
         ACCENT_INVALID_STATE = 4
     }
 
@@ -47,7 +48,7 @@ namespace WinApi.User32.Experimental
     {
         public AccentState AccentState;
         public AccentFlags AccentFlags;
-        public int GradientColor;
-        public int AnimationId;
+        public uint GradientColor;
+        public uint AnimationId;
     }
 }
