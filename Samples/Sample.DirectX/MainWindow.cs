@@ -40,7 +40,7 @@ namespace Sample.DirectX
 
                 context.FillRectangle(new RawRectangleF(200, 200, 500, 700), b);
 
-                for (var i = 0; i < 10; i++)
+                for (var i = 0; i < 3; i++)
                 {
                     b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
                     context.FillEllipse(
