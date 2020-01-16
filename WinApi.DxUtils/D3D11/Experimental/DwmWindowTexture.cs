@@ -26,25 +26,23 @@ namespace WinApi.DxUtils.D3D11.Experimental
         public void Update(NativeWindow win, bool updateWindow = true)
         {
             var fmt = (uint)Format.Unknown;
+            IntPtr sharedHandle = IntPtr.Zero;
+            ulong updateId = 0;
             var getres = DwmApiMethodsExperimental.DwmDxGetWindowSharedSurface(
-                win.Handle,
-                _adapter.Description.Luid,
-                IntPtr.Zero, 0,
-                ref fmt,
-                out var sharedHandle,
-                out var updateId
+                win.Handle, _adapter.Description.Luid, 0,
+                ref fmt, ref sharedHandle, ref updateId
             );
             DxgiFormat = (Format)fmt;
 
             if(getres > 0)
                 Debugger.Break();
+            if(sharedHandle == IntPtr.Zero) return;
 
             if (updateWindow)
             {
                 var rect = win.GetWindowRect();
                 var updateRes = DwmApiMethodsExperimental.DwmDxUpdateWindowSharedSurface(
                     win.Handle, updateId,
-                    0, IntPtr.Zero,
                     ref rect
                 );
             }

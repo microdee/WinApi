@@ -29,11 +29,11 @@ namespace WinApi.DwmApi.Experimental
         /// </para>
         /// </param>
         /// <param name="pfmtWindow">
-        /// <para>On input, the desired format of the surface. On output, the actual format of the returned surface.</para>
+        /// <para>(ref uint) On input, the desired format of the surface. On output, the actual format of the returned surface.</para>
         /// <para>Originally DXGI_FORMAT, when used with SharpDX use SharpDX.DXGI.Format</para>
         /// </param>
-        /// <param name="phDxSurface">On output, the shared handle to the surface.</param>
-        /// <param name="puiUpdateId">On output, the ID of the update.</param>
+        /// <param name="phDxSurface">(out IntPtr) On output, the shared handle to the surface.</param>
+        /// <param name="puiUpdateId">(out long) On output, the ID of the update.</param>
         /// <returns>
         /// <para>
         /// It's not managed WinApi <see cref="HResult"/> as at time of writing some
@@ -66,15 +66,37 @@ namespace WinApi.DwmApi.Experimental
         /// similar manner on other versions of Windows. This function is not present in
         /// any header or static-link library, and it is located at ordinal 100 in dwmapi.dll.
         /// </remarks>
+        public static unsafe uint DwmDxGetWindowSharedSurface(
+            IntPtr hwnd,
+            long luidAdapter,
+            //IntPtr hmonitorAssociation, Reserved
+            ulong dwFlags,
+            ref uint fmtWindow,
+            ref IntPtr hDxSurface,
+            ref ulong uiUpdateId
+        ) {
+            fixed (uint* pfmtWindow = &fmtWindow)
+            fixed (IntPtr* phDxSurface = &hDxSurface)
+            fixed (ulong* puiUpdateId = &uiUpdateId)
+            {
+                return DwmDxGetWindowSharedSurface(
+                    hwnd, luidAdapter, IntPtr.Zero, dwFlags,
+                    new IntPtr(pfmtWindow),
+                    new IntPtr(phDxSurface),
+                    new IntPtr(puiUpdateId)
+                );
+            }
+        }
+
         [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-        public static extern uint DwmDxGetWindowSharedSurface(
+        internal static extern uint DwmDxGetWindowSharedSurface(
             IntPtr hwnd,
             long luidAdapter,
             IntPtr hmonitorAssociation,
             ulong dwFlags,
-            ref uint pfmtWindow,
-            out IntPtr phDxSurface,
-            out ulong puiUpdateId
+            IntPtr pfmtWindow,
+            IntPtr phDxSurface,
+            IntPtr puiUpdateId
         );
 
         /// <summary>
@@ -85,7 +107,7 @@ namespace WinApi.DwmApi.Experimental
         /// <param name="dwFlags">Reserved (presumably keep it 0)</param>
         /// <param name="hmonitorAssociation">Reserved (presumably keep it 0)</param>
         /// <param name="prc">
-        /// The rect of the window being updated, in window coordinate space.
+        /// (out Rectangle) The rect of the window being updated, in window coordinate space.
         /// A NULL rectangle indicates that no region was updated.
         /// </param>
         /// <returns>S_OK if successful, otherwise a FAILED HRESULT.</returns>
@@ -102,13 +124,30 @@ namespace WinApi.DwmApi.Experimental
         /// and must be called in that scenario, regardless of whether the surface is updated or not.
         /// </para>
         /// </remarks>
+        public static unsafe HResult DwmDxUpdateWindowSharedSurface(
+            IntPtr hwnd,
+            ulong puiUpdateId,
+            //ulong dwFlags, Reserved
+            //IntPtr hmonitorAssociation, Reserved
+            ref Rectangle rc
+        ) {
+            fixed (Rectangle* prc = &rc)
+            {
+                return DwmDxUpdateWindowSharedSurface(
+                    hwnd, puiUpdateId,
+                    0, IntPtr.Zero,
+                    new IntPtr(prc)
+                );
+            }
+        }
+
         [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-        public static extern HResult DwmDxUpdateWindowSharedSurface(
+        internal static extern HResult DwmDxUpdateWindowSharedSurface(
             IntPtr hwnd,
             ulong puiUpdateId,
             ulong dwFlags,
             IntPtr hmonitorAssociation,
-            ref Rectangle prc
+            IntPtr prc
         );
     }
 }
