@@ -10,7 +10,7 @@ using WinApi.Windows;
 
 namespace Sample.DirectX
 {
-    public sealed class MainWindow : EventedWindowCore
+    public sealed class MainD2DWindow : EventedWindowCore
     {
         private readonly Dx11Component m_dx = new Dx11Component();
 
