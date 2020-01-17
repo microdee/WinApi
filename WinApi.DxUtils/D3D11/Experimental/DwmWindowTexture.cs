@@ -15,6 +15,8 @@ namespace WinApi.DxUtils.D3D11.Experimental
         private Adapter _adapter;
         private IntPtr _targetSharedHandle;
         public Texture2D Target { get; private set; }
+        public ShaderResourceView SRV { get; private set; }
+
         public Format DxgiFormat { get; private set; }
 
         public DwmWindowTexture(DeviceContext context, Adapter adapter)
@@ -36,7 +38,11 @@ namespace WinApi.DxUtils.D3D11.Experimental
 
             if(getres > 0)
                 Debugger.Break();
-            if(sharedHandle == IntPtr.Zero) return;
+            if(sharedHandle == IntPtr.Zero)
+            {
+                Debugger.Break();
+                return;
+            }
 
             if (updateWindow)
             {
@@ -50,11 +56,14 @@ namespace WinApi.DxUtils.D3D11.Experimental
             if (Target == null)
             {
                 Target = _ctx.Device.OpenSharedResource<Texture2D>(sharedHandle);
+                SRV = null;
             }
             else if (_targetSharedHandle != sharedHandle)
             {
-                Target.Dispose();
+                Target?.Dispose();
+                SRV?.Dispose();
                 Target = _ctx.Device.OpenSharedResource<Texture2D>(sharedHandle);
+                SRV = new ShaderResourceView(_ctx.Device, Target);
             }
 
             _targetSharedHandle = sharedHandle;
@@ -63,6 +72,7 @@ namespace WinApi.DxUtils.D3D11.Experimental
         public void Dispose()
         {
             Target.Dispose();
+            SRV.Dispose();
         }
     }
 }
