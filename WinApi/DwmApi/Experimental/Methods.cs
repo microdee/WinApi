@@ -17,7 +17,6 @@ namespace WinApi.DwmApi.Experimental
         /// </summary>
         /// <param name="hwnd">An HWND specifying the window to be updated.</param>
         /// <param name="luidAdapter">The LUID of the adapter where the surface should be located.</param>
-        /// <param name="hmonitorAssociation">Reserved (presumably keep it 0)</param>
         /// <param name="dwFlags">
         /// <para>
         /// This parameter can be one of the following values,
@@ -28,12 +27,12 @@ namespace WinApi.DwmApi.Experimental
         /// application is capable of presenting to a GDI shared surface.
         /// </para>
         /// </param>
-        /// <param name="pfmtWindow">
+        /// <param name="fmtWindow">
         /// <para>(ref uint) On input, the desired format of the surface. On output, the actual format of the returned surface.</para>
         /// <para>Originally DXGI_FORMAT, when used with SharpDX use SharpDX.DXGI.Format</para>
         /// </param>
-        /// <param name="phDxSurface">(out IntPtr) On output, the shared handle to the surface.</param>
-        /// <param name="puiUpdateId">(out long) On output, the ID of the update.</param>
+        /// <param name="hDxSurface">(out IntPtr) On output, the shared handle to the surface.</param>
+        /// <param name="uiUpdateId">(out long) On output, the ID of the update.</param>
         /// <returns>
         /// <para>
         /// It's not managed WinApi <see cref="HResult"/> as at time of writing some
@@ -104,8 +103,6 @@ namespace WinApi.DwmApi.Experimental
         /// </summary>
         /// <param name="hwnd">An HWND specifying the window to be updated.</param>
         /// <param name="puiUpdateId">The update ID retrieved from <see cref="DwmDxGetWindowSharedSurface"/>.</param>
-        /// <param name="dwFlags">Reserved (presumably keep it 0)</param>
-        /// <param name="hmonitorAssociation">Reserved (presumably keep it 0)</param>
         /// <param name="prc">
         /// (out Rectangle) The rect of the window being updated, in window coordinate space.
         /// A NULL rectangle indicates that no region was updated.
